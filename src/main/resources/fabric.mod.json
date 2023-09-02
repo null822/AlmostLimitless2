@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "messingaround",
+  "version": "${version}",
+  "name": "Messing Around",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/noahk/Messing Around"
+  },
+  "license": "MIT",
+  "icon": "assets/MessingAround/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.null8.messingaround.client.MessingAroundClient"
+    ],
+    "main": [
+      "com.null8.messingaround.MessingAround"
+    ]
+  },
+  "mixins": [
+    "MessingAround.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
