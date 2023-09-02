@@ -22,7 +22,7 @@ public abstract class ChunkRegionMixin implements WorldView {
         try {
             cir.setReturnValue(this.getChunk(chunkX, chunkZ, ChunkStatus.EMPTY));
         } catch (Exception ignored) {
-            cir.setReturnValue(this.getChunk(0, 0));
+            cir.setReturnValue(this.getChunk(0, 0, ChunkStatus.EMPTY));
         }
     }
 }
