@@ -100,7 +100,9 @@ task bloatedMixin {
     doLast {
         List<String> lines = new ArrayList<>();
         lines.add("package com.null8.messingaround.mixin;")
+        lines.add("")
         lines.add("import org.spongepowered.asm.mixin.Mixin;")
+        lines.add("")
         lines.add("@Mixin(targets = {")
 
         Path commonJar = loom.namedMinecraftProvider.parentMinecraftProvider.remappedJars[0].outputJarPath()
@@ -108,8 +110,11 @@ task bloatedMixin {
         FileSystems.newFileSystem(URI.create("jar:${commonJar.toUri()}"), [create: false]).withCloseable { fs ->
             addMixinLines(lines, fs)
         }
+        lines.set(lines.size()-1, lines.get(lines.size()-1).substring(0, lines.get(lines.size()-1).size()-1))
         lines.add("})")
-        lines.add("public class THE {}")
+        lines.add("public class THE {")
+        lines.add("")
+        lines.add("}")
 
 
         file('src/main/java/com/null8/messingaround/mixin/THE.java').text = String.join('\n', lines) + '\n'
@@ -123,7 +128,7 @@ def addMixinLines(List<String> lines, FileSystem fs) {
                 .sorted(Comparator.comparing { it.name })
                 .filter { (it.access & Opcodes.ACC_INTERFACE) == 0 }
                 .forEach { node ->
-                    lines.add("\"${node.name}\",")
+                    lines.add("        \"${node.name}\",")
 //                    for (def method : node.methods) {
 //                        // Checklist for finding block constructors as of 1.19.3:
 //                        //  - class directly in net.minecraft.block (excluding subpackages)
