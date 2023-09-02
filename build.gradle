@@ -83,3 +83,72 @@ publishing {
         // retrieving dependencies.
     }
 }
+
+
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.Opcodes
+import org.objectweb.asm.Type
+import org.objectweb.asm.tree.ClassNode
+
+import java.nio.file.FileSystem
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
+import java.util.stream.Collectors
+
+task bloatedMixin {
+    doLast {
+        List<String> lines = new ArrayList<>();
+        lines.add("package com.null8.messingaround.mixin;")
+        lines.add("import org.spongepowered.asm.mixin.Mixin;")
+        lines.add("@Mixin(targets = {")
+
+        Path commonJar = loom.namedMinecraftProvider.parentMinecraftProvider.remappedJars[0].outputJarPath()
+
+        FileSystems.newFileSystem(URI.create("jar:${commonJar.toUri()}"), [create: false]).withCloseable { fs ->
+            addMixinLines(lines, fs)
+        }
+        lines.add("})")
+        lines.add("public class THE {}")
+
+
+        file('src/main/java/com/null8/messingaround/mixin/THE.java').text = String.join('\n', lines) + '\n'
+    }
+}
+
+def addMixinLines(List<String> lines, FileSystem fs) {
+    for (final def a in fs.rootDirectories) {
+        Files.walk(a).filter { Files.isRegularFile(it) && it.toString().endsWith(".class") }
+                .map { loadClass(it) }
+                .sorted(Comparator.comparing { it.name })
+                .filter { (it.access & Opcodes.ACC_INTERFACE) == 0 }
+                .forEach { node ->
+                    lines.add("\"${node.name}\",")
+//                    for (def method : node.methods) {
+//                        // Checklist for finding block constructors as of 1.19.3:
+//                        //  - class directly in net.minecraft.block (excluding subpackages)
+//                        //  - method name == <init> (by definition)
+//                        //  - contains an AbstractBlock$Settings parameter
+//                        //  - only taking into account non-abstract classes and non-public constructors
+//
+//                        // Block constructor...
+//                        if (method.name == "<init>" && Type.getArgumentTypes(method.desc).any { it.internalName == 'net/minecraft/block/AbstractBlock$Settings' }) {
+//                            // ...and non-public
+//                            if ((method.access & Opcodes.ACC_PUBLIC) == 0) {
+//                                lines.add("transitive-accessible method $node.name <init> $method.desc")
+//                            }
+//                        }
+//                    }
+                }
+    }
+}
+
+ClassNode loadClass(Path path) {
+    def node = new ClassNode()
+
+    Files.newInputStream(path).withCloseable { is ->
+        new ClassReader(is).accept(node, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES)
+    }
+
+    return node
+}

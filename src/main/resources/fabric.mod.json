@@ -20,7 +20,8 @@
     ]
   },
   "mixins": [
-    "MessingAround.mixins.json"
+    "MessingAround.mixins.json",
+    "MessingAround2.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

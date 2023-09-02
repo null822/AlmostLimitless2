@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.null8.messingaround.mixin",
+  "plugin": "com.null8.messingaround.IntToLongPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "THE",
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
