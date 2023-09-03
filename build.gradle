@@ -32,7 +32,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
         // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+   // modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}" we don't work with this
 
     modLocalRuntime "maven.modrinth:qPqMrMUl:99RJdkEG"
     modLocalRuntime "maven.modrinth:gnI4RYZy:6VbZYpdo"
