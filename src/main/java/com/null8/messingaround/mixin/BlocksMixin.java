@@ -16,7 +16,7 @@ public class BlocksMixin {
     private static void register(String id, Block block, CallbackInfoReturnable<Block> cir) {
 
         if (Objects.equals(id, "grass_block")) {
-            block = new GrassBlock(AbstractBlock.Settings.of(Material.LAVA).ticksRandomly().strength(0.6F).sounds(BlockSoundGroup.ANCIENT_DEBRIS));
+            //block = new GrassBlock(AbstractBlock.Settings.of(Material.LAVA).ticksRandomly().strength(0.6F).sounds(BlockSoundGroup.ANCIENT_DEBRIS));
         }
 
     }
